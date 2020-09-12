@@ -30,6 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord = __importStar(require("discord.js"));
 const db_1 = require("./db");
+const utility_1 = require("./utility");
 const config_json_1 = require("./config.json");
 const client = new discord.Client();
 client.on("ready", () => {
@@ -62,7 +63,7 @@ client.on("message", (msg) => __awaiter(void 0, void 0, void 0, function* () {
             { name: "!tz_zones", value: "A list of all available timezones" },
             { name: "!tz_view", value: "A list of all **your** added timezones" },
         ];
-        db_1.DB.makeEmbeded("Timezone bot commands", "Some commands for the bot", commandList, msg);
+        utility_1.utility.makeEmbeded("Timezone bot commands", "Some commands for the bot", commandList, msg);
     }
     else if (command === "tz_zones") {
         // returns list of all available timezones (backup timezone list can be found in config.json)

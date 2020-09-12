@@ -1,6 +1,7 @@
-import * as discord from "discord.js";
 import * as mysql from "mysql";
 import Moment from "moment";
+
+import { utility } from "./utility";
 
 import "./providers";
 
@@ -30,7 +31,7 @@ export class DB {
         });
       });
 
-      DB.makeEmbeded(
+      utility.makeEmbeded(
         "List of available timezones",
         "Add a timezone by using **!tz_add GMT**",
         zoneList,
@@ -82,7 +83,7 @@ export class DB {
         });
       });
 
-      DB.makeEmbeded(
+      utility.makeEmbeded(
         "List of your timezones",
         "Remove a timezone by using **!tz_remove GMT**",
         embedMsg,
@@ -97,7 +98,7 @@ export class DB {
 
     const h12 = `${time} ${suffix}`;
 
-    let convertedTime = DB.convert1224(h12, msg);
+    let convertedTime = utility.convert1224(h12, msg);
 
     if (convertedTime) {
       let date = Moment([
@@ -147,38 +148,5 @@ export class DB {
         }
       });
     });
-  }
-
-  // converts 12 hour time to 24 hour time
-  static convert1224(time12h: any, msg: any) {
-    const [time, modifier] = time12h.split(" ");
-
-    let [hours, minutes] = time.split(":");
-
-    if (hours > 12) {
-      msg.channel.send("Invalid time");
-      return false;
-    } else {
-      if (hours === "12") {
-        hours = "00";
-      }
-
-      if (modifier === "PM") {
-        hours = parseInt(hours, 10) + 12;
-      }
-
-      return [hours, minutes];
-    }
-  }
-
-  // function that makes embeded messages
-  static makeEmbeded(title: string, description: string, array: any, msg: any) {
-    const embededMessage = new discord.MessageEmbed()
-      .setColor("#F7044E")
-      .setTitle(title)
-      .setDescription(description)
-      .addFields(array);
-
-    msg.channel.send(embededMessage);
   }
 }

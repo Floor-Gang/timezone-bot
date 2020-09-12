@@ -23,9 +23,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DB = void 0;
-const discord = __importStar(require("discord.js"));
 const mysql = __importStar(require("mysql"));
 const moment_1 = __importDefault(require("moment"));
+const utility_1 = require("./utility");
 require("./providers");
 const con = mysql.createConnection({
     host: "127.0.0.1",
@@ -48,7 +48,7 @@ class DB {
                     inline: true,
                 });
             });
-            DB.makeEmbeded("List of available timezones", "Add a timezone by using **!tz_add GMT**", zoneList, msg);
+            utility_1.utility.makeEmbeded("List of available timezones", "Add a timezone by using **!tz_add GMT**", zoneList, msg);
         });
     }
     // add zone to server
@@ -92,7 +92,7 @@ class DB {
                     inline: true,
                 });
             });
-            DB.makeEmbeded("List of your timezones", "Remove a timezone by using **!tz_remove GMT**", embedMsg, msg);
+            utility_1.utility.makeEmbeded("List of your timezones", "Remove a timezone by using **!tz_remove GMT**", embedMsg, msg);
         });
     }
     // function that converts givin time zone (in GMT+0) to server spesific timezones
@@ -100,7 +100,7 @@ class DB {
         var _a;
         let fullMsg = "";
         const h12 = `${time} ${suffix}`;
-        let convertedTime = DB.convert1224(h12, msg);
+        let convertedTime = utility_1.utility.convert1224(h12, msg);
         if (convertedTime) {
             let date = moment_1.default([
                 2020,
@@ -141,33 +141,6 @@ class DB {
                 }
             });
         });
-    }
-    // converts 12 hour time to 24 hour time
-    static convert1224(time12h, msg) {
-        const [time, modifier] = time12h.split(" ");
-        let [hours, minutes] = time.split(":");
-        if (hours > 12) {
-            msg.channel.send("Invalid time");
-            return false;
-        }
-        else {
-            if (hours === "12") {
-                hours = "00";
-            }
-            if (modifier === "PM") {
-                hours = parseInt(hours, 10) + 12;
-            }
-            return [hours, minutes];
-        }
-    }
-    // function that makes embeded messages
-    static makeEmbeded(title, description, array, msg) {
-        const embededMessage = new discord.MessageEmbed()
-            .setColor("#F7044E")
-            .setTitle(title)
-            .setDescription(description)
-            .addFields(array);
-        msg.channel.send(embededMessage);
     }
 }
 exports.DB = DB;

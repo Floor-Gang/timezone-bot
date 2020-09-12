@@ -1,6 +1,7 @@
 import * as discord from "discord.js";
 
 import { DB } from "./db";
+import { utility } from "./utility";
 
 import { token, prefix } from "./config.json";
 
@@ -38,7 +39,7 @@ client.on("message", async (msg: discord.Message) => {
       { name: "!tz_view", value: "A list of all **your** added timezones" },
     ];
 
-    DB.makeEmbeded(
+    utility.makeEmbeded(
       "Timezone bot commands",
       "Some commands for the bot",
       commandList,
