@@ -10,7 +10,7 @@ This bot helps you when you want to convert a time to different timezones.
 
 ```json
 {
-  "prefix": "<prefix>", (default is !)
+  "prefix": "<prefix>",
   "token": "<token>"
 }
 ```
