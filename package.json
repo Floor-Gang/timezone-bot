@@ -1,7 +1,7 @@
 {
   "name": "timezone-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bot that helps you when you want to convert a time to different timezones.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,11 +18,9 @@
   },
   "homepage": "https://github.com/Floor-Gang/timezone-bot#readme",
   "dependencies": {
+    "@types/sqlite3": "^3.1.6",
     "discord.js": "^12.3.1",
     "moment": "^2.27.0",
-    "mysql": "^2.18.1"
-  },
-  "devDependencies": {
-    "@types/mysql": "^2.15.15"
+    "sqlite3": "^5.0.0"
   }
 }

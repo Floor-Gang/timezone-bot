@@ -1,0 +1,12 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "timezoneBot",
+      "group": "timezoneBot",
+      "database": "${workspaceFolder:timezone-bot}/timezoneBot.db"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
+}
