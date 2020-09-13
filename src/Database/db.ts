@@ -69,22 +69,26 @@ export class DB {
 
     try {
       db.get(sql, [zoneName], (err: any, row: any) => {
-        zone_id = row.id;
+        if (row) {
+          zone_id = row.id;
 
-        const sql: string =
-          "SELECT * FROM server_zones WHERE server_ID = ? AND zone_id = ?";
+          const sql: string =
+            "SELECT * FROM server_zones WHERE server_ID = ? AND zone_id = ?";
 
-        db.all(sql, [server_id, zone_id], (err: any, rows: any) => {
-          if (rows.length == 0) {
-            const sql: string =
-              "INSERT INTO server_zones (server_ID, zone_ID) VALUES (?, ?)";
-            db.run(sql, [server_id, zone_id], () => {
-              msg.channel.send("Added timezone");
-            });
-          } else {
-            msg.channel.send("You've already added this timezone");
-          }
-        });
+          db.all(sql, [server_id, zone_id], (err: any, rows: any) => {
+            if (rows.length == 0) {
+              const sql: string =
+                "INSERT INTO server_zones (server_ID, zone_ID) VALUES (?, ?)";
+              db.run(sql, [server_id, zone_id], () => {
+                msg.channel.send("Added timezone");
+              });
+            } else {
+              msg.channel.send("You've already added this timezone");
+            }
+          });
+        } else {
+          msg.channel.send("This timezone doesn't exist");
+        }
       });
     } catch (error) {
       throw error;
