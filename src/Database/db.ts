@@ -1,5 +1,5 @@
 // dependencies
-const sqlite3 = require("sqlite3").verbose();
+import * as sqlite3 from "sqlite3";
 import Moment from "moment";
 
 // TS classes/providers

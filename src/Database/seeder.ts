@@ -1,10 +1,9 @@
-const sqlite3 = require("sqlite3").verbose();
+import * as sqlite3 from "sqlite3";
 
 let db = new sqlite3.Database("./timezoneBot.db");
 
 export class seeder {
   static async seedTimezones() {
-    console.log(timeZones);
     try {
       timeZones.forEach((timeZone) => {
         db.run("INSERT INTO tz_zones (name, gmt, offset) VALUES (? , ?, ?)", [
