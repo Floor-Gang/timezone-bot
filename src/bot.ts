@@ -1,7 +1,10 @@
 import * as discord from "discord.js";
 
-import { DB } from "./db";
-import { utility } from "./utility";
+// import { DB } from "./db";
+import { utility } from "./Utilities/utility";
+import { DB } from "./Database/db";
+
+let dbClass = new DB();
 
 import { token, prefix } from "./config.json";
 
@@ -47,19 +50,19 @@ client.on("message", async (msg: discord.Message) => {
     );
   } else if (command === "tz_zones") {
     // returns list of all available timezones (backup timezone list can be found in config.json)
-    DB.tz_zones(msg);
+    dbClass.tz_zones(msg);
   } else if (command === "tz_add") {
     // add zone to server
-    DB.tz_add(msg, args[0]);
+    dbClass.tz_add(msg, args[0]);
   } else if (command === "tz_view") {
     // return a list of all server spesific timezones
-    DB.tz_view(msg);
+    dbClass.tz_view(msg);
   } else if (command === "tz_convert") {
     // function that converts givin time zone (in GMT+0) to server spesific timezones
-    DB.tz_convert(msg, args[0], args[1]);
+    dbClass.tz_convert(msg, args[0], args[1]);
   } else if (command === "tz_delete") {
     // Deletes givin timezone
-    DB.tz_delete(msg, args[0]);
+    dbClass.tz_delete(msg, args[0]);
   }
 });
 

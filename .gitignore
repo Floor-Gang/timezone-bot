@@ -109,3 +109,9 @@ src/config.json
 
 # Apple files
 .DS_Store
+
+# Config
+src/config.json
+
+# Database
+timezoneBot.session.sql
