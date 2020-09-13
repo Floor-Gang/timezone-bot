@@ -53,7 +53,7 @@ client.on("message", async (msg: discord.Message) => {
     dbClass.tz_zones(msg);
   } else if (command === "tz_add") {
     // add zone to server
-    dbClass.tz_add(msg, args[0]);
+    dbClass.tz_add(msg, args[0].toUpperCase());
   } else if (command === "tz_view") {
     // return a list of all server spesific timezones
     dbClass.tz_view(msg);
