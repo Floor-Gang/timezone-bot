@@ -1,11 +1,12 @@
 // dependencies
 import * as sqlite3 from "sqlite3";
 import Moment from "moment";
+import * as discord from "discord.js";
 
 // TS classes/providers
 import { utility } from "../Utilities/utility";
 import { seeder } from "./seeder";
-import "../Utilities/providers";
+import "../Utilities/types";
 
 let db = new sqlite3.Database("./timezoneBot.db");
 
@@ -23,7 +24,7 @@ export class DB {
       db.run(create_tz_zones);
       db.run(create_server_zones);
 
-      db.all(sql, [], (err: any, rows: any) => {
+      db.all(sql, [], (err: Error, rows: select_tz_zones[]) => {
         if (rows.length == 0) {
           seeder.seedTimezones();
         }
@@ -34,13 +35,13 @@ export class DB {
   }
 
   // returns list of all available timezones (backup timezone list can be found in config.json)
-  public async tz_zones(msg: any) {
-    let zoneList: any[] = [];
+  public async tz_zones(msg: discord.Message) {
+    let zoneList: makeEmbeded[] = [];
 
     const sql: string = "SELECT * FROM tz_zones";
 
     try {
-      db.all(sql, [], (err: any, rows: any) => {
+      db.all(sql, [], (err: Error, rows: select_tz_zones[]) => {
         rows.forEach((zone: { name: string; gmt: string }) => {
           zoneList.push({
             name: zone.name,
@@ -62,30 +63,34 @@ export class DB {
   }
 
   // adds zone to server
-  public async tz_add(msg: any, zoneName: string) {
+  public async tz_add(msg: discord.Message, zoneName: string) {
     let zone_id: number;
-    let server_id: number = msg?.guild?.id;
+    let server_id: string | undefined = msg?.guild?.id;
     const sql: string = "SELECT * FROM tz_zones WHERE name = ?";
 
     try {
-      db.get(sql, [zoneName], (err: any, row: any) => {
+      db.get(sql, [zoneName], (err: Error, row: select_tz_zones) => {
         if (row) {
           zone_id = row.id;
 
           const sql: string =
             "SELECT * FROM server_zones WHERE server_ID = ? AND zone_id = ?";
 
-          db.all(sql, [server_id, zone_id], (err: any, rows: any) => {
-            if (rows.length == 0) {
-              const sql: string =
-                "INSERT INTO server_zones (server_ID, zone_ID) VALUES (?, ?)";
-              db.run(sql, [server_id, zone_id], () => {
-                msg.channel.send("Added timezone");
-              });
-            } else {
-              msg.channel.send("You've already added this timezone");
+          db.get(
+            sql,
+            [server_id, zone_id],
+            (err: Error, row: select_server_zones) => {
+              if (!row) {
+                const sql: string =
+                  "INSERT INTO server_zones (server_ID, zone_ID) VALUES (?, ?)";
+                db.run(sql, [server_id, zone_id], () => {
+                  msg.channel.send("Added timezone");
+                });
+              } else {
+                msg.channel.send("You've already added this timezone");
+              }
             }
-          });
+          );
         } else {
           msg.channel.send("This timezone doesn't exist");
         }
@@ -96,14 +101,14 @@ export class DB {
   }
 
   // returns a list of all dc server spesific timezones
-  public async tz_view(msg: any) {
-    const server_id = msg?.guild?.id;
+  public async tz_view(msg: discord.Message) {
+    const server_id: string | undefined = msg?.guild?.id;
     const sql: string =
       "SELECT * FROM server_zones INNER JOIN tz_zones on server_zones.zone_ID = tz_zones.id WHERE server_ID = ?";
-    let embedMsg: any[] = [];
+    let embedMsg: makeEmbeded[] = [];
 
     try {
-      db.all(sql, [server_id], (arr: any, rows: any) => {
+      db.all(sql, [server_id], (arr: Error, rows: select_server_tz_zones[]) => {
         rows.forEach((zone: { name: string; gmt: string }) => {
           embedMsg.push({
             name: zone.name,
@@ -125,8 +130,8 @@ export class DB {
   }
 
   // converts givin time zone (in GMT+0) to server spesific timezones
-  public async tz_convert(msg: any, time: string, suffix: string) {
-    const server_id = msg?.guild?.id;
+  public async tz_convert(msg: discord.Message, time: string, suffix: string) {
+    const server_id: string | undefined = msg?.guild?.id;
     const h12 = `${time} ${suffix}`;
     let cTime = utility.convert1224(h12, msg);
     let fullMsg: string = "";
@@ -140,21 +145,27 @@ export class DB {
 
         const sql: string = `SELECT * from server_zones INNER JOIN tz_zones on server_zones.zone_ID = tz_zones.id WHERE server_ID = ?`;
 
-        db.all(sql, [server_id], (err: any, rows: any) => {
-          if (rows.length == 0) {
-            msg.channel.send(
-              "No timezones added, use **!tz_zones** for a list of all time zones and use **!tz_add <timezone>** to add timezones"
-            );
-          } else {
-            rows.forEach((zone: { name: string; gmt: string; offset: any }) => {
-              date.utcOffset(parseInt(zone.offset));
+        db.all(
+          sql,
+          [server_id],
+          (err: Error, rows: select_server_tz_zones[]) => {
+            if (rows.length == 0) {
+              msg.channel.send(
+                "No timezones added, use **!tz_zones** for a list of all time zones and use **!tz_add <timezone>** to add timezones"
+              );
+            } else {
+              rows.forEach(
+                (zone: { name: string; gmt: string; offset: number }) => {
+                  date.utcOffset(zone.offset);
 
-              fullMsg += `${date.format("hh:mm a")} ${zone.name}\n`;
-            });
+                  fullMsg += `${date.format("hh:mm a")} ${zone.name}\n`;
+                }
+              );
 
-            msg.channel.send(fullMsg);
+              msg.channel.send(fullMsg);
+            }
           }
-        });
+        );
       }
     } catch (error) {
       throw error;
@@ -162,16 +173,16 @@ export class DB {
   }
 
   // deletes givin timezone from dc server
-  public async tz_delete(msg: any, zone: string) {
-    const server_id = msg?.guild?.id;
+  public async tz_delete(msg: discord.Message, zone: string) {
+    const server_id: string | undefined = msg?.guild?.id;
     const sql: string = "SELECT id FROM tz_zones WHERE name = ?";
 
     try {
-      db.get(sql, [zone], (err: any, row: any) => {
+      db.get(sql, [zone], (err: Error, row: select_tz_zones) => {
         const sql: string =
           "DELETE FROM server_zones WHERE server_ID = ? AND zone_id = ?";
 
-        db.run(sql, [server_id, row.id], (err: any, result: any) => {
+        db.run(sql, [server_id, row.id], (err: Error) => {
           msg.channel.send("Timezone deleted from your list");
         });
       });
