@@ -134,7 +134,7 @@ export class DB {
     const server_id: string | undefined = msg?.guild?.id;
     const h12 = `${time} ${suffix}`;
     let cTime = utility.convert1224(h12, msg);
-    let fullMsg: string = "";
+    let fullMsg: string = `${time} ${suffix} in other timezones:\n`;
 
     try {
       if (cTime) {

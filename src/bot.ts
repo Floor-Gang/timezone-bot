@@ -19,27 +19,30 @@ client.on("message", async (msg: discord.Message) => {
   if (!msg.content.startsWith(prefix) || msg.author.bot) return;
 
   const args = msg.content.slice(prefix.length).trim().split(/ +/);
-  const command = args?.shift()?.toLowerCase();
+  const command = `${args?.shift()?.toLowerCase()} ${args[0]}`;
+
+  console.log(args);
+  console.log(command);
 
   msg.delete();
 
-  if (command === "tz_ping") {
+  if (command === "tz ping") {
     // ping pong function
     await msg.reply("pong");
-  } else if (command === "tz_help") {
+  } else if (command === "tz help") {
     // sends embeded card with the help menu
     const commandList = [
-      { name: "!tz_ping", value: "Just a ping" },
-      { name: "!tz_help", value: "Help menu :)" },
+      { name: "!tz ping", value: "Just a ping" },
+      { name: "!tz help", value: "Gets you this screen :)" },
+      { name: "!tz zones", value: "A list of all available timezones" },
+      { name: "!tz add <timezone>", value: "Add a timezone to your list" },
       {
-        name: "!tz_convert <time> <AM/PM>",
+        name: "!tz convert <time> <AM/PM>",
         value:
           "Convert GMT+0 time to added timezones (add timezones with **!tz_add <timezone>**)",
       },
-      { name: "!tz_add <timezone>", value: "Add a timezone to your list" },
-      { name: "!tz_delete <timezone>", value: "Deletes selected timezone" },
-      { name: "!tz_zones", value: "A list of all available timezones" },
-      { name: "!tz_view", value: "A list of all **your** added timezones" },
+      { name: "!tz delete <timezone>", value: "Deletes selected timezone" },
+      { name: "!tz view", value: "A list of all **your** added timezones" },
     ];
 
     utility.makeEmbeded(
@@ -48,21 +51,21 @@ client.on("message", async (msg: discord.Message) => {
       commandList,
       msg
     );
-  } else if (command === "tz_zones") {
+  } else if (command === "tz zones") {
     // returns list of all available timezones (backup timezone list can be found in config.json)
     dbClass.tz_zones(msg);
-  } else if (command === "tz_add") {
+  } else if (command === "tz add") {
     // add zone to server
-    dbClass.tz_add(msg, args[0].toUpperCase());
-  } else if (command === "tz_view") {
+    dbClass.tz_add(msg, args[1].toUpperCase());
+  } else if (command === "tz view") {
     // return a list of all server spesific timezones
     dbClass.tz_view(msg);
-  } else if (command === "tz_convert") {
+  } else if (command === "tz convert") {
     // function that converts givin time zone (in GMT+0) to server spesific timezones
-    dbClass.tz_convert(msg, args[0], args[1]);
-  } else if (command === "tz_delete") {
+    dbClass.tz_convert(msg, args[1], args[2]);
+  } else if (command === "tz delete") {
     // Deletes givin timezone
-    dbClass.tz_delete(msg, args[0]);
+    dbClass.tz_delete(msg, args[1]);
   }
 });
 
