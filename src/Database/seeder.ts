@@ -1,6 +1,6 @@
 import * as sqlite3 from "sqlite3";
 
-let db = new sqlite3.Database("./timezoneBot.db");
+let db = new sqlite3.Database("./src/Database/timezoneBot.db");
 
 export class seeder {
   static async seedTimezones() {

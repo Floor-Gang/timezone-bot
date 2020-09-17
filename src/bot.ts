@@ -21,9 +21,6 @@ client.on("message", async (msg: discord.Message) => {
   const args = msg.content.slice(prefix.length).trim().split(/ +/);
   const command = `${args?.shift()?.toLowerCase()} ${args[0]}`;
 
-  console.log(args);
-  console.log(command);
-
   msg.delete();
 
   if (command === "tz ping") {

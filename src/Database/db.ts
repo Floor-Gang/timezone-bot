@@ -8,7 +8,7 @@ import { utility } from "../Utilities/utility";
 import { seeder } from "./seeder";
 import "../Utilities/types";
 
-let db = new sqlite3.Database("./timezoneBot.db");
+let db = new sqlite3.Database("./src/Database/timezoneBot.db");
 
 export class DB {
   // constructs database and fills table tz_zones when it's empty
