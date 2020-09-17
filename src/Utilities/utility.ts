@@ -2,7 +2,7 @@ import * as discord from "discord.js";
 
 export class utility {
   // converts 12 hour time to 24 hour time
-  static convert1224(time12h: any, msg: any) {
+  static convert1224(time12h: any, msg: discord.Message) {
     const [time, modifier] = time12h.split(" ");
 
     let [hours, minutes] = time.split(":");
@@ -24,7 +24,12 @@ export class utility {
   }
 
   // function that makes embeded messages
-  static makeEmbeded(title: string, description: string, array: any, msg: any) {
+  static makeEmbeded(
+    title: string,
+    description: string,
+    array: makeEmbeded[],
+    msg: discord.Message
+  ) {
     const embededMessage = new discord.MessageEmbed()
       .setColor("#F7044E")
       .setTitle(title)
