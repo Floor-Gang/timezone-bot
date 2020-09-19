@@ -114,4 +114,4 @@ src/config.json
 src/config.json
 
 # Database
-timezoneBot.session.sql
+src/Database/timezoneBot.session.sql
