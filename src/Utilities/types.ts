@@ -5,6 +5,10 @@ type select_tz_zones = {
   offset: number;
 };
 
+type select_length_tz_zones = {
+  Length: number;
+};
+
 type select_server_zones = {
   id: number;
   server_ID: number;

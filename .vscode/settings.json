@@ -5,7 +5,7 @@
       "driver": "SQLite",
       "name": "timezoneBot",
       "group": "timezoneBot",
-      "database": "${workspaceFolder:timezone-bot}/timezoneBot.db"
+      "database": "${workspaceFolder:timezone-bot}/src/Database/timezoneBot.db"
     }
   ],
   "sqltools.useNodeRuntime": true
