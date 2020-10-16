@@ -22,7 +22,6 @@ client.on("message", async (msg: discord.Message) => {
 
   listener.listen(command, args);
 
-  msg.delete();
 });
 
 client.login(token);

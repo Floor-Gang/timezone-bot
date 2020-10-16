@@ -7,7 +7,6 @@ let database = new DB();
 export class listeners {
   public listen(command: string, _arguments: string[]) {
     _arguments.shift();
-    console.log(_arguments);
     switch (command) {
       case "tz help":
         util.helpMessage();

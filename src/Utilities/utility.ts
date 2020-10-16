@@ -1,4 +1,5 @@
 import * as discord from "discord.js";
+import { prefix } from "../config.json";
 
 export class utility {
   /* 
@@ -34,17 +35,17 @@ export class utility {
   */
   public helpMessage() {
     const commandList = [
-      { name: "!tz ping", value: "Just a ping" },
-      { name: "!tz help", value: "Gets you this screen :)" },
-      { name: "!tz zones", value: "A list of all available timezones" },
-      { name: "!tz add <timezone>", value: "Add a timezone to your list" },
+      { name: `${prefix}tz ping`, value: "Just a ping" },
+      { name: `${prefix}tz help`, value: "Gets you this screen :)" },
+      { name: `${prefix}tz zones`, value: "A list of all available timezones" },
+      { name: `${prefix}tz add <timezone>`, value: "Add a timezone to your list" },
       {
-        name: "!tz convert <time> <AM/PM>",
+        name: `${prefix}tz convert <time> <AM/PM>`,
         value:
           "Convert GMT+0 time to added timezones (add timezones with **!tz_add <timezone>**)",
       },
-      { name: "!tz delete <timezone>", value: "Deletes selected timezone" },
-      { name: "!tz view", value: "A list of all **your** added timezones" },
+      { name: `${prefix}tz delete <timezone>`, value: "Deletes selected timezone" },
+      { name: `${prefix}tz view`, value: "A list of all **your** added timezones" },
     ];
 
     utility.makeEmbeded(

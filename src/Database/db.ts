@@ -131,7 +131,6 @@ export class DB {
   public async tz_convert(time: string, suffix: string) {
     const h12 = `${time} ${suffix}`;
     let cTime = utility.convert1224(h12);
-    console.log(cTime);
     let fullMsg: string = `${time} ${suffix} in other timezones:\n`;
 
     try {
