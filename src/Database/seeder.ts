@@ -1,16 +1,16 @@
-import * as sqlite3 from "sqlite3";
+import better_sqlite3 from "better-sqlite3";
 
-let db = new sqlite3.Database("./src/Database/timezoneBot.db");
+let db = new better_sqlite3("./src/Database/timezoneBot.db");
 
 export class seeder {
   static async seedTimezones() {
     try {
       timeZones.forEach((timeZone) => {
-        db.run("INSERT INTO tz_zones (name, gmt, offset) VALUES (? , ?, ?)", [
-          timeZone.name,
-          timeZone.GMT,
-          timeZone.offset,
-        ]);
+        const sql = db.prepare(
+          "INSERT INTO tz_zones (name, gmt, offset) VALUES (? , ?, ?)"
+        );
+
+        sql.run(timeZone.name, timeZone.GMT, timeZone.offset);
       });
     } catch (error) {
       throw error;
